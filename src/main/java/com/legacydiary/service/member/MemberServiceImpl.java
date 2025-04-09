@@ -2,8 +2,8 @@ package com.legacydiary.service.member;
 
 import org.springframework.stereotype.Service;
 
+import com.legacydiary.domain.MemberDTO;
 import com.legacydiary.persistence.MemberDAO;
-import com.mysql.cj.xdevapi.Result;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor // 생성자 주입 방식
 public class MemberServiceImpl implements MemberService {
 
-	private final MemberDAO memberDAO; // 생성자 주입 방식
+	private final MemberDAO dao; // 생성자 주입 방식
 	
 	@Override
 	public boolean idIsDuplicate(String tmpMemberId) {
@@ -19,9 +19,22 @@ public class MemberServiceImpl implements MemberService {
 		
 		boolean result = false; 
 		
-		if (memberDAO.selectDuplicateId(tmpMemberId) == 1) { // 중복!!
+		if (dao.selectDuplicateId(tmpMemberId) == 1) { // 중복!!
 			result = true;
 		}
+		return result;
+	}
+
+	@Override
+	public boolean saveMember(MemberDTO registerMember) {
+		
+		boolean result = false;
+		
+		if (dao.insertMember(registerMember) == 1) {
+			// 가입성공
+			result = true;
+		}
+		
 		return result;
 	}
 
