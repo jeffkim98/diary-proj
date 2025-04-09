@@ -15,7 +15,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public boolean idIsDuplicate(String tmpMemberId) {
-		// 중복 이면(한명 이상 있으면) true , 중복이 아니면 false
+		// 중복 이면(한명 이상 있으면) true , 중복이 아니면(0명이면) false
 		
 		boolean result = false; 
 		
