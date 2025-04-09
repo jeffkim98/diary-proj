@@ -38,10 +38,19 @@ public class SendMailService {
 		props.put("mail.smtp.host" , "smtp.naver.com");
 		props.put("mail.smtp.port", "587");
 		props.put("mail.smtp.starttls.required", "true");
+		props.put("mail.smtp.ssl.trust","smtp.naver.com");
 		props.put("mail.smtp.ssl.protocols", "TLSv1.2");
 		props.put("mail.smtp.auth", "true");
 		
 		getAccount();
+		
+//		props.put("mail.smtp.host" , "smtp.gmail.com");
+//		props.put("mail.smtp.port", "587");
+//		props.put("mail.smtp.starttls.required", "true");
+//		props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+//		props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+//		props.put("mail.smtp.auth", "true");
+		
 			
 		// 세션 생성
 		Session mailSession = Session.getInstance(props, new Authenticator() {

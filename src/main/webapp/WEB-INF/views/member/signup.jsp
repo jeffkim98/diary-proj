@@ -99,7 +99,7 @@ $(function () {
 		if ($("#email").val().length > 0) {
 			checkEmail();
 		} else {
-			outputError("이메일은 필수 입력입니다." , $("#email"), "red");
+			outputError("이메일은 필수 입력 항목입니다." , $("#email"), "red");
 		}
 		
 	});
@@ -142,7 +142,9 @@ function callSendMail() {
             console.log(data);
             if (data == "success") {
             	if ($(".authenticationDiv").length == 0) {
-            	showAuthenticateDiv(); // 인증번호를 입력받을 태그 요소를 출력            		
+            		
+            	showAuthenticateDiv(); // 인증번호를 입력받을 태그 요소를 출력
+            	startTimer();
             	}
             }
 			
@@ -214,14 +216,56 @@ function idValid() {
 	return result;
 }
 
-function isvalid() {
+function pwdValid() {
+	let result = false;
+	
+	if($("#pwdValid").val()== "checked"){
+		result = true;
+	
+	}	
+	return result;
+}
+
+function emailValid() {
+	let result = false;
+	
+	if($("#emailValid").val()== "checked"){
+		result = true;
+	
+	}	
+	return result;
+}
+
+function nameValid() {
+	
+	if ($("#memberName").val().length == 0){
+		outputError("이름은 필수 입력 항목입니다." , $("#memberName") , "red");
+		return false;
+		
+	} else {
+		outputError("", $("#memberName") , "green")
+	}
+	return true;
+}
+
+
+function isValid() {
 	// 아이디 : 필수 , 중복 불가, 길이 (4~8자)
 	
 	let result = false;
+	
 	let idCheck = idValid();
+	let pwdCheck = pwdValid();
+	let emailCheck = emailValid();
+	let nameCheck = nameValid();
+	
+	if(idCheck && pwdCheck && emailCheck && nameCheck ) {
+		result = true;
+	}
 	
 	return result;	
 }
+
 
 </script>
 </head>
@@ -232,7 +276,7 @@ function isvalid() {
 
 			<h1>회원 가입</h1>
 
-			<form action="/signup" method="post">
+			<form action="signup" method="post">
 				<div class="mb-3 mt-3">
 					<label for="memberId">아이디 :</label><span></span>
 					<input type="text" class="form-control" id="memberId" name="memberId" placeholder="아이디를 입력하세요!!">
@@ -253,7 +297,7 @@ function isvalid() {
 				<div class="mb-3 mt-3">
 					<label for="email">이메일 :</label><span></span>
 					<input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요!!">
-					<input type="hidden" id = "emailValid"/>
+					<input type="hidden" id = "emailValid"/> <div id="timer"></div>
 				</div>
 				
 				<div class="mb-3 mt-3">
