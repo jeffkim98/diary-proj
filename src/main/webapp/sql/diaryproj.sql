@@ -9,3 +9,25 @@
  
  -- 아이디 중복 검사
  select count(*) from member where memberId= 'jeffkim';
+ 
+ -- 회원 가입
+ insert into member(memberId, memberPwd, email, memberName)
+ values(?,?,?,?)
+ 
+ -- -----------------------------------------------------------
+ -- diary 테이블 생성
+ 
+--  CREATE TABLE `kyj`.`diary` (
+--   `dno` INT NOT NULL AUTO_INCREMENT,
+--   `title` VARCHAR(100) NOT NULL,
+--   `dueDate` DATE NOT NULL,
+--   `writer` VARCHAR(8) NOT NULL,
+--   `finished` TINYINT NULL DEFAULT '0',
+--   PRIMARY KEY (`dno`));
+
+-- insert into diary (title, dueDate, writer) values(?, ?, ?);
+
+
+
+ 
+ 
