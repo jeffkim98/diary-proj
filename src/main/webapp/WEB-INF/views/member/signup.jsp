@@ -109,7 +109,7 @@ $(function () {
 
 function checkEmail() {
 // 	alert("checkEmail");
-// 1) 정규표현식을 이용하여 이메일 주소 형식인지 아닌지 판단 + 중복체크
+// 1) 정규표현식을 이용하여 이메일 주소 형식인지 아닌지 판단 + 중복체크(유니크 제약조건)
 // 2) 이메일 주소 형식이면.. 인증번호를 이메일로 보내고
 // 	  인증번호를 입력받을 태그를 생성해 다시 입력 받아서 
 // 	  보낸 인증번호와 유저가 입력한 인증번호가 일치하는지 검증
@@ -141,11 +141,15 @@ function callSendMail() {
             // 통신이 성공하면 수행할 함수
             console.log(data);
             if (data == "success") {
+            	alert("이메일로 인증번호를 발송했습니다. 인증코드를 입력해주세요.")
+            	
             	if ($(".authenticationDiv").length == 0) {
             		
             	showAuthenticateDiv(); // 인증번호를 입력받을 태그 요소를 출력
-            	startTimer();
+            	
             	}
+            	startTimer(); // 타이머 동작
+            	
             }
 			
           },
@@ -153,19 +157,102 @@ function callSendMail() {
           complete: function () {
           },
         });
+	}
+
+let timeLeft = 180; // 초단위 = 180초(3분)
+let intervalId = null;
+
+function startTimer() {
+	 clearTimer();	
+// 	 alert("타이머 동작!");
+
+	 timeLeft = 180; // 시간 초기화
+	 updateDisplay(timeLeft);
+	 
+	 intervalId = setInterval(function() {
+		timeLeft--;
+		updateDisplay(timeLeft);
+		
+		 if (timeLeft <= 0) {
+			// 타이머 종료
+			 clearTimer();
+			 expiredTimer();
+		 }
+	}, 1000);
+	 
+}
+
+function expiredTimer() {
+	// 인증하기 버튼 비활성화
+	$("#authBtn").prop("disabled",true);
+	
+	// 타이머 종료시 back-end에도 인증시간이 만료되었음을 알려야 한다.
+	if ($("#emailValid").val() !== "checked") {
+		
+		$.ajax({
+	          url: "/member/clearAuthCode" , // 데이터가 송수신될 서버의 주소
+	          type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
+	          dataType: "text", // 수신받을 데이터 타입 (MIME TYPE) (text, json, xml)
+	          // async: false, // 동기 통신 방식
+	          success: function (data) {
+	            // 통신이 성공하면 수행할 함수
+	            console.log(data);
+	            alert("인증시간이 만료되었습니다. 이메일 주소를 다시 입력하고 재인증 해주세요.");
+	            $(".authenticationDiv").remove();
+	            $("#email").val("").focus();
+				
+	          },
+	          error: function () {},
+	          complete: function () {
+	          },
+	        });
+	}
 	
 }
+
+function clearTimer() {
+	if (intervalId != null){
+
+		clearInterval(intervalId);
+		intervalId = null;
+		
+	}
+	
+	
+}
+
+function updateDisplay(seconds) {
+	// 시간 출력 = 3:00
+	// 170 -> 170 / 60 = 2.xxx
+	let min = Math.floor(seconds / 60);
+	let sec = String(seconds % 60).padStart(2,"0");
+// 	console.log(min + ":" + sec);
+	let remainTime = min + ":" + sec;
+	$(".timer").html(remainTime);
+	
+	
+}
+
+
 
 function showAuthenticateDiv() {
 	
 	let authDiv = `
 		<div class = "authenticationDiv mt-2">
 		<input type="text" class="form-control" id="memberAuthCode" placeholder="인증번호를 입력하세요..." />
-		<button type="button" class="btn btn-info" onclick="checkAuthCode();">인증하기</button>
+		<div class = "d-flex align-items-center">
+		<span class = "timer">3:00</span>
+		</div>
+		<button type="button" id="authBtn" class="btn btn-info" onclick="checkAuthCode();">인증하기</button>
 		</div>
 	`;
 	
 	$(authDiv).insertAfter("#email");
+	
+	// 재인증 버튼
+// 	$("#reAuth").on("click",function(){
+// 		callSendMail(); // 이메일 발송
+// 	});
 }
 
 function checkAuthCode() {
@@ -268,6 +355,13 @@ function isValid() {
 
 
 </script>
+<style type="text/css">
+	.timer {color: red;
+	
+	}
+
+</style>
+
 </head>
 <body>
 	<jsp:include page="../header.jsp"></jsp:include>
@@ -297,7 +391,7 @@ function isValid() {
 				<div class="mb-3 mt-3">
 					<label for="email">이메일 :</label><span></span>
 					<input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요!!">
-					<input type="hidden" id = "emailValid"/> <div id="timer"></div>
+					<input type="hidden" id = "emailValid"/> 
 				</div>
 				
 				<div class="mb-3 mt-3">
