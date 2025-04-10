@@ -1,6 +1,5 @@
 package com.legacydiary.controller.member;
 
-import static org.hamcrest.CoreMatchers.nullValue;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.legacydiary.domain.MemberDTO;
 import com.legacydiary.domain.MyResponse;
-import com.legacydiary.domain.User;
 import com.legacydiary.service.member.MemberService;
 import com.legacydiary.util.SendMailService;
 
