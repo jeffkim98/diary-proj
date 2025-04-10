@@ -92,7 +92,7 @@ public class MemberController {
 		log.info("authCode : {} " , authCode);
 		
 		try {
-			sendMailService.sendMail(tmpMemberEmail, authCode); // 메인 전송
+			sendMailService.sendMail(tmpMemberEmail, authCode); // 메일 전송
 			
 			session.setAttribute("authCode", authCode); // 인증코드를 세션객체에 저장 
 			result = "success";
@@ -146,6 +146,18 @@ public class MemberController {
 		}
 	
 		return result;
+		
+	}
+	
+	@PostMapping("/clearAuthCode")
+	public ResponseEntity<String> clearAuthCode(HttpSession session) {
+
+		if (session.getAttribute("authCode") != null) {
+			// 세션에 저장된 인증 코드를 삭제
+			session.removeAttribute("authCode");
+		}
+		
+		return new ResponseEntity<String>("success" ,HttpStatus.OK);
 		
 	}
 	
