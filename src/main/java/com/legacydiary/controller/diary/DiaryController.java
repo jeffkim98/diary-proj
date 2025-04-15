@@ -1,6 +1,9 @@
 package com.legacydiary.controller.diary;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.legacydiary.domain.DiaryDTO;
 import com.legacydiary.domain.DiaryVO;
+import com.legacydiary.domain.MemberDTO;
 import com.legacydiary.service.diary.DiaryService;
 
 import lombok.RequiredArgsConstructor;
@@ -54,12 +58,29 @@ public class DiaryController {
 	    
 	}
 	
+//	@GetMapping("/list")
+//	public String viewAll(Model model) {
+//		
+//		List<DiaryVO> list = diaryService.viewAll();
+//		
+//		model.addAttribute("diaryList", list);
+//		
+//		return "/diary/list"; // 뷰이름 반환
+//		
+//	}
+	
 	@GetMapping("/list")
-	public String viewAll(Model model) {
+	public String viewAll(Model model , HttpSession session) {
 		
-		List<DiaryVO> list = diaryService.viewAll();
+		MemberDTO loginMember = (MemberDTO) session.getAttribute("loginMember");
 		
-		model.addAttribute("diaryList", list);
+		if (loginMember == null ) {
+			return "redirect:/member/login"; // 로그인하지 않은경우는 로그인페이지로 리다이렉트 시킨다.
+		} else {
+			// 로그인 한 경우
+			List<DiaryVO> list = diaryService.viewAll(loginMember.getMemberId());
+			model.addAttribute("diaryList", list);
+		}
 		
 		return "/diary/list"; // 뷰이름 반환
 		
@@ -75,6 +96,32 @@ public class DiaryController {
 		
 		diaryService.updateFinished(dno,finished);
 			
+		return "success";
+	}
+	
+	@PostMapping("/modify")
+	@ResponseBody
+	public String modifyDiary(@RequestParam Integer dno,
+							@RequestParam String title,
+							@RequestParam String dueDateStr) {
+		
+	
+		log.info("dno : {} " , dno);
+		log.info("title : {} " ,title);
+		log.info("dueDateStr : {}" , dueDateStr);
+		
+		
+		// 서비스단에 넘길 VO 객체로 생성 & 저장
+		LocalDate dueDate = LocalDate.parse(dueDateStr);
+		
+		DiaryVO diaryVO = DiaryVO.builder()
+									.dno(dno)
+									.title(title)
+									.dueDate(dueDate)
+									.build();
+		
+		diaryService.modify(diaryVO);
+		
 		return "success";
 	}
 	

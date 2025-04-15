@@ -15,4 +15,9 @@
 		 insert into member(memberId, memberPwd, email, memberName)
  		 values(#{memberId},sha1(md5(#{memberPwd})),#{email},#{memberName})
 	</insert>
+	
+	<select id="loginWithLoginDTO" resultType="MemberDTO">
+<!--<select id="loginWithLoginDTO" resultType="com.legacydiary.domain.MemberDTO"> -->
+		select * from member where memberId = #{memberId} and memberPwd = sha1(md5(#{memberPwd})) 
+	</select>
 </mapper>

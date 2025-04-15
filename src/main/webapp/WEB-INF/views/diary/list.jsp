@@ -31,6 +31,14 @@
 		          success: function (data) {
 		            // 통신이 성공하면 수행할 함수
 		            console.log(data);
+		            if (data == "success") {
+		            	if (checked) {
+		            		$("#dlist-" + dno).addClass("completed");
+		            	} else {
+		            		$("#dlist-" + dno).removeClass("completed");
+		            	}
+		            	self.location='/diary/list';
+		            }
 		       		
 		          },
 		          error: function () {},
@@ -40,10 +48,76 @@
 			
 		});
 		
+	
+	
+	// 수정 (title,dueDate)
+	$(".modifyBtn").click(function() {
+		
+		let dno = $(this).data("dno"); // data-XXXX -> data("XXXX")
+		let title = $(this).data("title");
+		let date = $(this).data("date");
+		
+		console.log(dno, title, date);
+		
+		$("#modifyDno").val(dno);
+		$("#modifyTitle").val(title);
+		$("#modifyDueDate").val(date);
+		
+		
+		$("#modifyModal").show();
+	});
+	
+	$(".closeModal").click(function() {
+		$("#modifyModal").hide();
 	});
 
+});
 
+function modifyDiary() {
+	let dno = $("#modifyDno").val();
+	let title = $("#modifyTitle").val();
+	let dueDateStr = $("#modifyDueDate").val();
+	
+	console.log(dno, title, dueDateStr);
+	// 유효성 검사
+	if (title == "" || dueDateStr == "") {
+		alert("제목, 날짜를 입력하세요!!");
+		return;
+	}
+	
+	// 수정 요청 보내기
+	$.ajax({
+        url: "/diary/modify" , // 데이터가 송수신될 서버의 주소
+        type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
+		data: {
+			dno : dno,
+			title : title,
+			dueDateStr : dueDateStr 
+		}, // 보내는 데이터
+        dataType: "text", // 수신받을 데이터 타입 (MIME TYPE) (text, json, xml)
+        // async: false, // 동기 통신 방식
+        success: function (data) {
+          // 통신이 성공하면 수행할 함수
+          console.log(data);
+          $("#modifyModal").hide();
+          self.location="/diary/list";
+          
+        },
+        error: function () {},
+        complete: function () {
+        },
+      });
+	
+	
+}
 </script>
+<style type="text/css">
+	li.completed {
+		text-decoration: line-through;
+		color : gray;
+	}
+
+</style>
 </head>
 <body>
 
@@ -56,20 +130,65 @@
 
 			<ul class="list-group">
 			<c:forEach var="diary" items="${diaryList }">
-				<li class="list-group-item" >
+				<li class="list-group-item d-flex align-items-center ${diary.finished ? 'completed' : '' }" 
+					id="dlist-${diary.dno }">
 				<!-- 체크박스 -->
 				<input type="checkbox" class="form-check-input finishedCheckbox" data-dno="${diary.dno }"
 				<c:if test="${diary.finished }">checked</c:if>/>
-				<label class="form-check-label" for="check1">${diary.title } </label>
-				<span>(${diary.dueDate })</span>
 				
+				<label class="" >${diary.title } </label>
 				
+				<div>(${diary.dueDate })</div>
+				
+				<button type="button" class="btn btn-outline-info btn-sm modifyBtn"
+						data-dno="${diary.dno }"
+						data-title="${diary.title }"
+						data-date="${diary.dueDate }">수정</button>
 				</li>
 			</c:forEach>
 			</ul>
 
 		</div>
 	</div>
+	
+<div class="modal" id="modifyModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="btn-close closeModal" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Modal body..
+        
+        <input type="hidden" id="modifyDno" name="dno" />
+        <div class="mb-3 mt-3">
+        	<label for="modifyTitle" class="form-label">Title :</label>
+			<input type="text" class="form-control" id="modifyTitle" placeholder="제목" name="title">
+         </div>
+         
+        <div class="mb-3">
+					<label for="modifyDueDate" class="form-label">Due Date :</label> 
+					<input type="date" class="form-control" id="modifyDueDate" name="dueDateStr">
+				</div>
+        
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="modifyDiary();">저장</button>
+        <button type="button" class="btn btn-danger closeModal" data-bs-dismiss="modal">Close</button>
+      	
+      </div>
+
+    </div>
+  </div>
+</div>
+	
 	<jsp:include page="../footer.jsp"></jsp:include>
 </body>
 </html>
