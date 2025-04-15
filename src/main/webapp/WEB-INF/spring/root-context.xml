@@ -15,19 +15,19 @@
 		
 			
 <!-- 		데이터베이스 Connection -->
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="url" value="jdbc:mysql://localhost:3306/kyj?serverTimezone=Asia/Seoul"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="1234"></property>
-		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property>
-	</bean>
-	
 <!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
-<!-- 		<property name="url" value="jdbc:log4jdbc:mysql://localhost:3306/kyj?serverTimezone=Asia/Seoul"></property> -->
+<!-- 		<property name="url" value="jdbc:mysql://localhost:3306/kyj?serverTimezone=Asia/Seoul"></property> -->
 <!-- 		<property name="username" value="root"></property> -->
 <!-- 		<property name="password" value="1234"></property> -->
-<!-- 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property> -->
+<!-- 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property> -->
 <!-- 	</bean> -->
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="url" value="jdbc:log4jdbc:mysql://localhost:3306/kyj?serverTimezone=Asia/Seoul"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="1234"></property>
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+	</bean>
 	
 	
 	

@@ -22,5 +22,4 @@ public class DiaryVO {
 	private LocalDate dueDate;
 	private String writer;
 	private boolean finished;
-	
 }

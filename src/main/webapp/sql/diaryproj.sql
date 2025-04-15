@@ -25,9 +25,14 @@
 --   `finished` TINYINT NULL DEFAULT '0',
 --   PRIMARY KEY (`dno`));
 
--- insert into diary (title, dueDate, writer) values(?, ?, ?);
+-- insert into diary (title, dueDate, writer) values(?);
 
+use kyj;
+select * from diary order by dno desc;
 
+-- 다이어리 title , dueDate 수정
+update diary set title = ? , duedate = ? where dno = ?
 
- 
+-- 로그인
+select * from member where memberId = ? and memberPwd = sha1(md5(?)) 
  
