@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class MyResponse {
-	
+
 	private int code;
 	private String data;
 	private String msg;

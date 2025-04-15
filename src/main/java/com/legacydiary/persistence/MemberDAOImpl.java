@@ -9,7 +9,7 @@ import com.legacydiary.domain.MemberDTO;
 
 @Repository
 public class MemberDAOImpl implements MemberDAO {
-
+	
 	@Autowired
 	SqlSession ses; // SqlSessionTemplate 주입
 	
@@ -18,21 +18,25 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	public int selectDuplicateId(String tmpMemberId) {
 		
-		return ses.selectOne(ns + "selectMemberId" , tmpMemberId);
+		return ses.selectOne(ns + "selectMemberId", tmpMemberId);
 	}
 
 	@Override
 	public int insertMember(MemberDTO registerMember) {
 		
-		return ses.insert(ns + "insertMember" , registerMember);
+		return ses.insert(ns + "insertMember", registerMember);
 	}
 
 	@Override
-	public MemberDTO Login(LoginDTO loginDTO) {
-		
-		return ses.selectOne(ns + "loginWithLoginDTO" , loginDTO);
+	public MemberDTO login(LoginDTO loginDTO) {
+		return ses.selectOne(ns + "loginWithLoginDTO", loginDTO);
 	}
 
+	@Override
+	public String selectEmailByMemberId(String memberId) {
+		
+		return ses.selectOne(ns + "selectEmailByMemberId", memberId);
+	}
 	
 	
 }

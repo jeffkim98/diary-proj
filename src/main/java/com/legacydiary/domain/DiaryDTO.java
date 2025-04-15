@@ -16,7 +16,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class DiaryDTO {
-	
+
 	private int dno;
 	private String title;
 	private String dueDateStr;
@@ -25,6 +25,6 @@ public class DiaryDTO {
 	
 	public LocalDate getDueDate() {
 		return LocalDate.parse(dueDateStr);
-		
 	}
+	
 }

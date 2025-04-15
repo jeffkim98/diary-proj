@@ -4,7 +4,7 @@ import com.legacydiary.domain.LoginDTO;
 import com.legacydiary.domain.MemberDTO;
 
 public interface MemberDAO {
-	
+
 	// 아이디 중복검사
 	int selectDuplicateId(String tmpMemberId);
 
@@ -12,5 +12,8 @@ public interface MemberDAO {
 	int insertMember(MemberDTO registerMember);
 	
 	// 로그인
-	MemberDTO Login(LoginDTO loginDTO);
+	MemberDTO login(LoginDTO loginDTO);
+	
+	// memberId로 이메일 조회
+	String selectEmailByMemberId(String memberId);
 }
