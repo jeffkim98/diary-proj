@@ -401,7 +401,7 @@ function isValid() {
 				
 				
 				<button type="submit" class="btn btn-success" onclick = "return isValid();">가입하기</button>
-				<button type="submit" class="btn btn-danger">취소하기</button>
+				<button type="reset" class="btn btn-danger">취소하기</button>
 			</form>
 
 		</div>
